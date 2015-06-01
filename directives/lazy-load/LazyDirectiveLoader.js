@@ -1,8 +1,8 @@
-app.service('LazyDirectiveLoader', ['$rootScope', '$q', '$compile', 'DirectivesFileMapper', function($rootScope, $q, $compile, DirectivesFileMapper) {
+app.service('LazyDirectiveLoader', ['$rootScope', '$q', '$compile', 'DirectivesFileMapper', function ($rootScope, $q, $compile, DirectivesFileMapper) {
 
     var _directivesLoaded = [];
 
-    var _load = function(directiveName) {
+    var _load = function (directiveName) {
         // make sure the directive exists in the mapper
         var directiveFile = DirectivesFileMapper.get(directiveName);
         if (!directiveFile) {
@@ -22,8 +22,8 @@ app.service('LazyDirectiveLoader', ['$rootScope', '$q', '$compile', 'DirectivesF
         // TODO: export this part to a separate service
         var script = document.createElement('script');
         script.src = directiveFile;
-        script.onload = function() {
-            _modulesLoaded.push(directiveFileName);
+        script.onload = function () {
+            _directivesLoaded.push(directiveName);
             $rootScope.$apply(deferred.resolve);
         };
         document.getElementsByTagName('head')[0].appendChild(script);
@@ -32,7 +32,7 @@ app.service('LazyDirectiveLoader', ['$rootScope', '$q', '$compile', 'DirectivesF
     };
 
     // You can use this method to dynamically compile the loaded directive
-    var _loadDirective = function(directiveName, attrsMap) {
+    var _loadDirective = function (directiveName, attrsMap) {
         var elementName = _snakeCase(directiveName);
         var element = '<' + elementName + '></' + elementName + '>';
         // TODO: convert `attrsMap` to attributes on the directive element tag
@@ -42,10 +42,10 @@ app.service('LazyDirectiveLoader', ['$rootScope', '$q', '$compile', 'DirectivesF
     // a helper method to translate a camel case name to snake case
     // I took this directly from the angular js libraries so i know
     // it's done the same way exactly!
-    var _snakeCase = function(string) {
+    var _snakeCase = function (separator) {
         var SNAKE_CASE_REGEXP = /[A-Z]/g;
         separator = separator || '-';
-        return name.replace(SNAKE_CASE_REGEXP, function(letter, pos) {
+        return name.replace(SNAKE_CASE_REGEXP, function (letter, pos) {
             return (pos ? separator : '') + letter.toLowerCase();
         });
     };
